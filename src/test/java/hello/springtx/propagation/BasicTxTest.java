@@ -47,4 +47,38 @@ public class BasicTxTest {
         txManager.rollback(status);
         log.info("rollback end");
     }
+
+    @Test
+    void double_commit() {
+        log.info("tx1 start");
+        TransactionStatus tx1 = txManager.getTransaction(new DefaultTransactionDefinition());
+
+        log.info("tx1 commit start");
+        txManager.commit(tx1);
+        log.info("tx1 commit end");
+
+        log.info("tx2 start");
+        TransactionStatus tx2 = txManager.getTransaction(new DefaultTransactionDefinition());
+
+        log.info("tx2 commit start");
+        txManager.commit(tx2);
+        log.info("tx2 commit end");
+    }
+
+    @Test
+    void commit_rollback() {
+        log.info("tx1 start");
+        TransactionStatus tx1 = txManager.getTransaction(new DefaultTransactionDefinition());
+
+        log.info("tx1 commit start");
+        txManager.commit(tx1);
+        log.info("tx1 commit end");
+
+        log.info("tx2 start");
+        TransactionStatus tx2 = txManager.getTransaction(new DefaultTransactionDefinition());
+
+        log.info("tx2 commit start");
+        txManager.rollback(tx2);
+        log.info("tx2 commit end");
+    }
 }

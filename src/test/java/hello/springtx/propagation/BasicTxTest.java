@@ -81,4 +81,21 @@ public class BasicTxTest {
         txManager.rollback(tx2);
         log.info("tx2 commit end");
     }
+
+    @Test
+    void inner_commit() {
+        log.info("outer tx start");
+        TransactionStatus outer = txManager.getTransaction(new DefaultTransactionDefinition());
+
+        log.info("inner start");
+        TransactionStatus inner = txManager.getTransaction(new DefaultTransactionDefinition());
+
+        log.info("inner commit start");
+        txManager.commit(inner);
+        log.info("inner commit end");
+
+        log.info("outer commit start");
+        txManager.commit(outer);
+        log.info("outer commit end");
+    }
 }

@@ -135,4 +135,25 @@ public class BasicTxTest {
                 .isInstanceOf(UnexpectedRollbackException.class);
         log.info("outer commit end");
     }
+
+    @Test
+    void inner_rollback_requires_new() {
+        log.info("outer tx start");
+        TransactionStatus outer = txManager.getTransaction(new DefaultTransactionDefinition());
+        log.info("outer.isNewTramsaction()={}", outer.isNewTransaction());
+
+        log.info("inner start");
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setPropagationBehavior(DefaultTransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus inner = txManager.getTransaction(definition);
+        log.info("inner.isNewTramsaction()={}", inner.isNewTransaction());
+
+        log.info("inner rollback start");
+        txManager.rollback(inner);
+        log.info("inner rollback end");
+
+        log.info("outer commit start");
+        txManager.commit(outer);
+        log.info("outer commit end");
+    }
 }
